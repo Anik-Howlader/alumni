@@ -27,17 +27,55 @@ body {
 
 /* HEADER */
 .header {
-    position:sticky;
-    top:0;
-    z-index:100;
-    background:var(--primary);
-    color:white;
-    padding:18px;
-    text-align:center;
-    font-family:'Libre Baskerville',serif;
-    font-size:20px;
-    letter-spacing:.5px;
-    box-shadow:0 2px 6px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--primary);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.nav {
+    max-width: 1200px;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 20px;
+    color: white;
+}
+
+.logo {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.menu {
+    display: flex;
+    gap: 20px;
+}
+
+.menu a {
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+    position: relative;
+    padding: 5px 0;
+}
+
+.menu a::after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 2px;
+    background: white;
+    left: 0;
+    bottom: 0;
+    transition: 0.3s;
+}
+
+.menu a:hover::after {
+    width: 100%;
 }
 
 /* CONTAINER */
@@ -166,15 +204,72 @@ tr:hover {
     color:white;
     border-color:var(--primary);
 }
+
+/* FOOTER */
+.footer {
+    margin-top:50px;
+    background: #002a52;
+    color: white;
+    padding: 30px 20px;
+}
+
+.footer-container {
+    max-width:1200px;
+    margin:auto;
+    display:grid;
+    grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
+    gap:20px;
+}
+
+.footer h4 {
+    margin-bottom:10px;
+    font-size:14px;
+}
+
+.footer a {
+    display:block;
+    color:#cfd8e3;
+    text-decoration:none;
+    font-size:13px;
+    margin-bottom:6px;
+}
+
+.footer a:hover {
+    color:white;
+}
+
+.copy {
+    text-align:center;
+    margin-top:20px;
+    font-size:12px;
+    color:#b8c7d9;
+}
+
+/* MOBILE */
+@media (max-width:768px){
+    .menu{display:none;}
+}
 </style>
 </head>
 
 <body>
 
+<!-- HEADER -->
 <div class="header">
-    Alumni Directory
+    <div class="nav">
+        <div class="logo">Alumni Directory</div>
+        <div class="menu">
+            <a href="#">Home</a>
+            <a href="#">Alumni</a>
+            <a href="#">Events</a>
+            <a href="#">Jobs</a>
+            <a href="#">About</a>
+            <a href="#">Contact</a>
+        </div>
+    </div>
 </div>
 
+<!-- CONTENT -->
 <div class="container">
 
 <div class="search">
@@ -199,6 +294,36 @@ tr:hover {
 
 <div id="pagination" class="pagination"></div>
 
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+    <div class="footer-container">
+        <div>
+            <h4>About</h4>
+            <a href="#">Our Alumni</a>
+            <a href="#">Mission</a>
+            <a href="#">Team</a>
+        </div>
+
+        <div>
+            <h4>Quick Links</h4>
+            <a href="#">Events</a>
+            <a href="#">Jobs</a>
+            <a href="#">Directory</a>
+        </div>
+
+        <div>
+            <h4>Support</h4>
+            <a href="#">Contact</a>
+            <a href="#">Help Center</a>
+            <a href="#">FAQ</a>
+        </div>
+    </div>
+
+    <div class="copy">
+        © 2026 Alumni Directory. All rights reserved.
+    </div>
 </div>
 
 <script>
@@ -272,7 +397,7 @@ function renderTable(data){
         <tr onclick="toggle(${index})">
             <td>
                 <div class="profile">
-                    <img src="${img}" class="avatar" onerror="this.src='${avatar(name)}'">
+                    <img src="${img}" class="avatar">
                     ${name}
                 </div>
             </td>
@@ -304,7 +429,6 @@ function renderPagination(){
     const container = document.getElementById("pagination");
 
     let html = "";
-
     for(let i=1;i<=totalPages;i++){
         html += `<button class="page-btn ${i===currentPage?"active":""}" onclick="goPage(${i})">${i}</button>`;
     }
@@ -322,7 +446,6 @@ function toggle(i){
     row.style.display = row.style.display==="table-row"?"none":"table-row";
 }
 
-// SEARCH
 document.getElementById("search").addEventListener("input",e=>{
     const val=e.target.value.toLowerCase();
 
