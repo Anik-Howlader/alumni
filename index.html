@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Alumni Directory</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -10,84 +11,91 @@
 <style>
 :root {
     --primary:#00356B;
+    --accent:#286DC0;
     --border:#e5e5e5;
-    --bg:#f5f7fa;
+    --text:#1a1a1a;
     --muted:#666;
+    --bg:#f5f7fa;
 }
 
 body {
     margin:0;
-    font-family:Inter,sans-serif;
+    font-family:'Inter',sans-serif;
     background:var(--bg);
+    color:var(--text);
 }
 
 /* HEADER */
 .header {
-    position:sticky;
-    top:0;
-    background:var(--primary);
-    color:white;
-    z-index:100;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--primary);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
 .nav {
-    max-width:1200px;
-    margin:auto;
-    display:flex;
-    justify-content:space-between;
-    padding:14px 20px;
+    max-width: 1200px;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 20px;
+    color: white;
 }
 
 .logo {
-    font-family:'Libre Baskerville',serif;
-    font-size:20px;
+    font-family: 'Libre Baskerville', serif;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.menu {
+    display: flex;
+    gap: 20px;
+}
+
+.menu a {
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+    position: relative;
+    padding: 5px 0;
+}
+
+.menu a::after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 2px;
+    background: white;
+    left: 0;
+    bottom: 0;
+    transition: 0.3s;
+}
+
+.menu a:hover::after {
+    width: 100%;
 }
 
 /* CONTAINER */
 .container {
     max-width:1200px;
     margin:auto;
-    padding:20px;
+    padding:30px 20px;
 }
 
-/* TOOLBAR */
-.toolbar {
-    display:flex;
-    flex-wrap:wrap;
-    gap:10px;
-    justify-content:space-between;
-    margin-bottom:15px;
+/* SEARCH */
+.search {
+    margin-bottom:20px;
 }
 
-.controls {
-    display:flex;
-    flex-wrap:wrap;
-    gap:10px;
-}
-
-input, select {
-    padding:10px;
+.search input {
+    width:100%;
+    padding:12px;
     border:1px solid var(--border);
+    font-size:14px;
     border-radius:6px;
-}
-
-/* VIEW TOGGLE */
-.view-toggle {
-    display:flex;
-    gap:5px;
-}
-
-.view-toggle button {
-    padding:10px 12px;
-    border:1px solid var(--border);
-    background:white;
-    cursor:pointer;
-    border-radius:6px;
-}
-
-.view-toggle button.active {
-    background:var(--primary);
-    color:white;
 }
 
 /* TABLE */
@@ -103,67 +111,69 @@ table {
     border-collapse:collapse;
 }
 
-th,td {
-    padding:12px;
-    font-size:13px;
+thead {
+    background:#f9fafb;
+}
+
+th, td {
+    padding:14px;
     border-bottom:1px solid var(--border);
+    font-size:13px;
+    text-align:left;
 }
 
 th {
     color:var(--muted);
 }
 
-/* CARD VIEW */
-.card-grid {
+tr:hover {
+    background:#f4f8ff;
+    cursor:pointer;
+}
+
+/* PROFILE */
+.profile {
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.avatar {
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    object-fit:cover;
+}
+
+/* EXPAND */
+.expand {
     display:none;
-    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    background:#f9fbff;
+}
+
+.expand td {
+    padding:25px;
+}
+
+.detail-grid {
+    display:grid;
+    grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
     gap:15px;
 }
 
-.card {
-    background:white;
-    border:1px solid var(--border);
-    border-radius:10px;
-    padding:15px;
-    transition:.2s;
-}
-
-.card:hover {
-    transform:translateY(-3px);
-    box-shadow:0 6px 18px rgba(0,0,0,0.08);
-}
-
-.card-header {
-    display:flex;
-    gap:10px;
-    align-items:center;
-}
-
-.card img {
-    width:45px;
-    height:45px;
-    border-radius:50%;
-}
-
-.name {
+.label {
     font-weight:600;
-}
-
-.small {
-    font-size:12px;
-    color:var(--muted);
+    color:var(--primary);
 }
 
 /* BUTTON */
 .btn {
-    display:inline-block;
-    margin-top:10px;
     padding:6px 10px;
     border:1px solid var(--primary);
     color:var(--primary);
     text-decoration:none;
-    border-radius:5px;
     font-size:12px;
+    border-radius:4px;
 }
 
 .btn:hover {
@@ -173,180 +183,279 @@ th {
 
 /* PAGINATION */
 .pagination {
-    margin-top:15px;
+    margin-top:20px;
     display:flex;
     justify-content:center;
-    gap:5px;
+    gap:8px;
+    flex-wrap:wrap;
 }
 
 .page-btn {
-    padding:6px 10px;
+    padding:6px 12px;
     border:1px solid var(--border);
     background:white;
     cursor:pointer;
+    font-size:13px;
+    border-radius:4px;
 }
 
 .page-btn.active {
     background:var(--primary);
     color:white;
+    border-color:var(--primary);
 }
 
 /* FOOTER */
 .footer {
-    margin-top:40px;
-    text-align:center;
-    padding:20px;
-    background:#002a52;
-    color:white;
+    margin-top:50px;
+    background: #002a52;
+    color: white;
+    padding: 30px 20px;
+}
+
+.footer-container {
+    max-width:1200px;
+    margin:auto;
+    display:grid;
+    grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
+    gap:20px;
+}
+
+.footer h4 {
+    margin-bottom:10px;
+    font-size:14px;
+}
+
+.footer a {
+    display:block;
+    color:#cfd8e3;
+    text-decoration:none;
     font-size:13px;
+    margin-bottom:6px;
+}
+
+.footer a:hover {
+    color:white;
+}
+
+.copy {
+    text-align:center;
+    margin-top:20px;
+    font-size:12px;
+    color:#b8c7d9;
+}
+
+/* MOBILE */
+@media (max-width:768px){
+    .menu{display:none;}
 }
 </style>
 </head>
 
 <body>
 
+<!-- HEADER -->
 <div class="header">
-<div class="nav">
-    <div class="logo">Alumni Directory</div>
-</div>
+    <div class="nav">
+        <div class="logo">Alumni Directory</div>
+        <div class="menu">
+            <a href="#">Home</a>
+            <a href="#">Alumni</a>
+            <a href="#">Events</a>
+            <a href="#">Jobs</a>
+            <a href="#">About</a>
+            <a href="#">Contact</a>
+        </div>
+    </div>
 </div>
 
+<!-- CONTENT -->
 <div class="container">
 
-<!-- TOOLBAR -->
-<div class="toolbar">
-
-<div class="controls">
-    <input id="search" placeholder="Search...">
-    <select id="degree"></select>
-    <select id="year"></select>
+<div class="search">
+    <input type="text" id="search" placeholder="Search alumni by name, company, role...">
 </div>
 
-<div class="view-toggle">
-    <button id="tableBtn" class="active" onclick="setView('table')">Table</button>
-    <button id="cardBtn" onclick="setView('card')">Cards</button>
-</div>
-
-</div>
-
-<!-- TABLE VIEW -->
-<div class="table-wrap" id="tableView">
+<div class="table-wrap">
 <table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Role</th>
+<th>Organization</th>
+<th>Degree</th>
+<th>Year</th>
+<th>LinkedIn</th>
+</tr>
+</thead>
 <tbody id="tbody"></tbody>
 </table>
 </div>
 
-<!-- CARD VIEW -->
-<div class="card-grid" id="cardView"></div>
-
-<div class="pagination" id="pagination"></div>
+<div id="pagination" class="pagination"></div>
 
 </div>
 
+<!-- FOOTER -->
 <div class="footer">
-© 2026 Alumni Directory
+    <div class="footer-container">
+        <div>
+            <h4>About</h4>
+            <a href="#">Our Alumni</a>
+            <a href="#">Mission</a>
+            <a href="#">Team</a>
+        </div>
+
+        <div>
+            <h4>Quick Links</h4>
+            <a href="#">Events</a>
+            <a href="#">Jobs</a>
+            <a href="#">Directory</a>
+        </div>
+
+        <div>
+            <h4>Support</h4>
+            <a href="#">Contact</a>
+            <a href="#">Help Center</a>
+            <a href="#">FAQ</a>
+        </div>
+    </div>
+
+    <div class="copy">
+        © 2026 Alumni Directory. All rights reserved.
+    </div>
 </div>
 
 <script>
 const SHEET_ID="1nT3duyb75t_Zvu__-lL7QyCbgep9CCv1v2sb81PL1sc";
 
-let all=[], filtered=[];
-let view="table";
+let currentPage = 1;
+const perPage = 10;
 
-function avatar(n){
-    return `https://ui-avatars.com/api/?name=${encodeURIComponent(n)}&background=00356B&color=fff`;
+function avatar(name){
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=00356B&color=fff`;
+}
+
+function getImg(a){
+    const direct=a["Profile Image URL"];
+    const name=a["Official Name"]||"";
+    if(direct && direct.startsWith("http")) return direct;
+    return avatar(name);
 }
 
 async function load(){
-    const res=await fetch(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=1526492513`);
+    const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=1526492513`;
+
+    const res=await fetch(url);
     const text=await res.text();
 
     const rows=text.split("\n").map(r=>r.split(","));
-    const h=rows[0];
+    const headers=rows[0];
 
-    all=rows.slice(1).map(r=>{
+    const data=rows.slice(1).map(r=>{
         let o={};
-        h.forEach((x,i)=>o[x.trim()]=r[i]);
+        headers.forEach((h,i)=>o[h.trim()]=r[i]);
         return o;
     });
 
-    setupFilters();
-    apply();
+    window.all=data;
+    window.filtered=data;
+
+    renderPage();
 }
 
-function setupFilters(){
-    const d=[...new Set(all.map(a=>a["Degree"]).filter(Boolean))];
-    const y=[...new Set(all.map(a=>a["Passing Year"]).filter(Boolean))];
+function renderPage(){
+    const start = (currentPage-1)*perPage;
+    const paginated = window.filtered.slice(start, start+perPage);
 
-    degree.innerHTML='<option value="">All Degree</option>'+d.map(x=>`<option>${x}</option>`).join("");
-    year.innerHTML='<option value="">All Year</option>'+y.map(x=>`<option>${x}</option>`).join("");
+    renderTable(paginated);
+    renderPagination();
 }
 
-function apply(){
-    const q=search.value.toLowerCase();
-    const d=degree.value;
-    const y=year.value;
+function renderTable(data){
+    const tbody=document.getElementById("tbody");
 
-    filtered=all.filter(a=>{
-        return (!d||a["Degree"]===d)&&
-               (!y||a["Passing Year"]===y)&&
-               Object.values(a).join(" ").toLowerCase().includes(q);
+    tbody.innerHTML=data.map((a,i)=>{
+        const index = (currentPage-1)*perPage + i;
+
+        const name=a["Official Name"]||"";
+        const role=a["Current Job Designation (if not current student)"]||"Student";
+        const org=a["Current Organization (if not current student)"]||"-";
+        const degree=a["Degree"]||"-";
+        const year=a["Passing Year"]||"-";
+        const email=a["Contact Email"]||"-";
+        const phone=a["Phone"]||"-";
+        const linkedin=a["LinkedIn ID (If available)"]||"";
+
+        const img=getImg(a);
+
+        const link=linkedin
+            ? (linkedin.includes("linkedin")?linkedin:"https://linkedin.com/in/"+linkedin)
+            :"";
+
+        return `
+        <tr onclick="toggle(${index})">
+            <td>
+                <div class="profile">
+                    <img src="${img}" class="avatar">
+                    ${name}
+                </div>
+            </td>
+            <td>${role}</td>
+            <td>${org}</td>
+            <td>${degree}</td>
+            <td>${year}</td>
+            <td>${link?`<a href="${link}" target="_blank" class="btn">View</a>`:"-"}</td>
+        </tr>
+
+        <tr class="expand" id="exp-${index}">
+            <td colspan="6">
+                <div class="detail-grid">
+                    <div><span class="label">Email:</span> ${email}</div>
+                    <div><span class="label">Phone:</span> ${phone}</div>
+                    <div><span class="label">Degree:</span> ${degree}</div>
+                    <div><span class="label">Graduation:</span> ${year}</div>
+                    <div><span class="label">Organization:</span> ${org}</div>
+                    <div><span class="label">Role:</span> ${role}</div>
+                </div>
+            </td>
+        </tr>
+        `;
+    }).join("");
+}
+
+function renderPagination(){
+    const totalPages = Math.ceil(window.filtered.length / perPage);
+    const container = document.getElementById("pagination");
+
+    let html = "";
+    for(let i=1;i<=totalPages;i++){
+        html += `<button class="page-btn ${i===currentPage?"active":""}" onclick="goPage(${i})">${i}</button>`;
+    }
+
+    container.innerHTML = html;
+}
+
+function goPage(p){
+    currentPage = p;
+    renderPage();
+}
+
+function toggle(i){
+    const row=document.getElementById("exp-"+i);
+    row.style.display = row.style.display==="table-row"?"none":"table-row";
+}
+
+document.getElementById("search").addEventListener("input",e=>{
+    const val=e.target.value.toLowerCase();
+
+    window.filtered = window.all.filter(a=>{
+        return Object.values(a).join(" ").toLowerCase().includes(val);
     });
 
-    render();
-}
-
-function render(){
-    const start=0;
-    const page=filtered.slice(start,10);
-
-    // TABLE
-    tbody.innerHTML=page.map(a=>`
-        <tr>
-            <td>${a["Official Name"]||""}</td>
-            <td>${a["Current Job Designation (if not current student)"]||""}</td>
-            <td>${a["Current Organization (if not current student)"]||""}</td>
-            <td>${a["Degree"]||""}</td>
-            <td>${a["Passing Year"]||""}</td>
-        </tr>
-    `).join("");
-
-    // CARDS
-    cardView.innerHTML=page.map(a=>`
-        <div class="card">
-            <div class="card-header">
-                <img src="${avatar(a["Official Name"])}">
-                <div>
-                    <div class="name">${a["Official Name"]||""}</div>
-                    <div class="small">${a["Current Job Designation (if not current student)"]||""}</div>
-                </div>
-            </div>
-
-            <div class="small">${a["Current Organization (if not current student)"]||""}</div>
-            <div class="small">${a["Degree"]||""} • ${a["Passing Year"]||""}</div>
-
-            <a class="btn">View</a>
-        </div>
-    `).join("");
-
-    document.getElementById("pagination").innerHTML="";
-}
-
-/* VIEW SWITCH */
-function setView(v){
-    view=v;
-
-    tableView.style.display = v==="table"?"block":"none";
-    cardView.style.display = v==="card"?"grid":"none";
-
-    tableBtn.classList.toggle("active",v==="table");
-    cardBtn.classList.toggle("active",v==="card");
-}
-
-/* EVENTS */
-search.oninput=apply;
-degree.onchange=apply;
-year.onchange=apply;
+    currentPage = 1;
+    renderPage();
+});
 
 load();
 </script>
