@@ -10,71 +10,119 @@
 
 <style>
 :root {
-    --primary: #8c1515;
-    --text: #1a1a1a;
-    --muted: #666;
-    --border: #e5e5e5;
-    --bg: #f7f7f7;
+    --primary:#8c1515;
+    --border:#e5e5e5;
+    --text:#1a1a1a;
+    --muted:#666;
+    --bg:#f7f7f7;
 }
 
 body {
     margin:0;
-    font-family: 'Inter', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-}
-
-h1 {
-    font-family: 'Libre Baskerville', serif;
+    font-family:'Inter',sans-serif;
+    background:var(--bg);
+    color:var(--text);
 }
 
 .header {
-    background: var(--primary);
+    background:var(--primary);
     color:white;
     padding:20px;
     text-align:center;
+    font-family:'Libre Baskerville',serif;
 }
 
 .container {
-    max-width:1100px;
+    max-width:1200px;
     margin:auto;
-    padding:40px 20px;
+    padding:30px 20px;
 }
 
-.grid {
-    display:grid;
-    grid-template-columns: repeat(auto-fill,minmax(280px,1fr));
-    gap:25px;
+/* SEARCH */
+.search {
+    margin-bottom:20px;
 }
 
-.card {
+.search input {
+    width:100%;
+    padding:12px;
+    border:1px solid var(--border);
+    font-size:14px;
+}
+
+/* TABLE */
+.table-wrap {
     background:white;
     border:1px solid var(--border);
-    padding:20px;
-    text-align:center;
+    overflow-x:auto;
 }
 
-.img {
-    width:90px;
-    height:90px;
-    border-radius:50%;
-    object-fit:cover;
-    margin-bottom:10px;
+table {
+    width:100%;
+    border-collapse:collapse;
 }
 
-.name {
-    font-weight:600;
+thead {
+    background:#fafafa;
 }
 
-.title {
+th, td {
+    padding:14px;
+    border-bottom:1px solid var(--border);
     font-size:13px;
+    text-align:left;
+}
+
+th {
+    font-weight:600;
     color:var(--muted);
 }
 
+tr:hover {
+    background:#fafafa;
+    cursor:pointer;
+}
+
+/* PROFILE */
+.profile {
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.avatar {
+    width:36px;
+    height:36px;
+    border-radius:50%;
+    object-fit:cover;
+}
+
+/* EXPAND */
+.expand {
+    display:none;
+    background:#fcfcfc;
+}
+
+.expand td {
+    padding:20px;
+}
+
+.detail-grid {
+    display:grid;
+    grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
+    gap:15px;
+    font-size:13px;
+}
+
+.label {
+    font-weight:600;
+    color:var(--muted);
+}
+
+/* BUTTON */
 .btn {
-    display:block;
-    margin-top:10px;
-    padding:8px;
+    display:inline-block;
+    padding:6px 10px;
     border:1px solid var(--primary);
     color:var(--primary);
     text-decoration:none;
@@ -85,93 +133,141 @@ h1 {
     background:var(--primary);
     color:white;
 }
+
 </style>
 </head>
 
 <body>
 
 <div class="header">
-    <h1>Alumni Directory</h1>
+    Alumni Directory
 </div>
 
 <div class="container">
-    <div class="grid" id="grid"></div>
+
+<div class="search">
+    <input type="text" id="search" placeholder="Search alumni by name, company, role...">
+</div>
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Role</th>
+<th>Organization</th>
+<th>Degree</th>
+<th>Year</th>
+<th>LinkedIn</th>
+</tr>
+</thead>
+<tbody id="tbody"></tbody>
+</table>
+</div>
+
 </div>
 
 <script>
 
-const SHEET_ID = "1nT3duyb75t_Zvu__-lL7QyCbgep9CCv1v2sb81PL1sc";
+const SHEET_ID="1nT3duyb75t_Zvu__-lL7QyCbgep9CCv1v2sb81PL1sc";
 
 function avatar(name){
     return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=8c1515&color=fff`;
 }
 
-// Try to use image safely
-function getProfileImage(alumni){
-    const direct = alumni["Profile Image URL"];
-    const linkedin = alumni["LinkedIn ID (If available)"];
-    const name = alumni["Official Name"] || "";
+function getImg(a){
+    const direct=a["Profile Image URL"];
+    const name=a["Official Name"]||"";
 
-    // 1. Direct uploaded image
-    if(direct && direct.startsWith("http")){
-        return direct;
-    }
+    if(direct && direct.startsWith("http")) return direct;
 
-    // 2. Try LinkedIn direct image (ONLY if it's already an image link)
-    if(linkedin && linkedin.includes("media") && linkedin.includes("profile")){
-        return linkedin;
-    }
-
-    // 3. fallback avatar
     return avatar(name);
 }
 
 async function load(){
-    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=1526492513`;
+    const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=1526492513`;
 
-    const res = await fetch(url);
-    const text = await res.text();
+    const res=await fetch(url);
+    const text=await res.text();
 
-    const rows = text.split("\n").map(r=>r.split(","));
-    const headers = rows[0];
+    const rows=text.split("\n").map(r=>r.split(","));
+    const headers=rows[0];
 
-    const data = rows.slice(1).map(r=>{
-        let obj={};
-        headers.forEach((h,i)=> obj[h.trim()] = r[i]);
-        return obj;
+    const data=rows.slice(1).map(r=>{
+        let o={};
+        headers.forEach((h,i)=>o[h.trim()]=r[i]);
+        return o;
     });
 
+    window.all=data;
     render(data);
 }
 
 function render(data){
-    const grid = document.getElementById("grid");
+    const tbody=document.getElementById("tbody");
 
-    grid.innerHTML = data.map(a=>{
-        const name = a["Official Name"] || "";
-        const job = a["Current Job Designation (if not current student)"] || "Student";
-        const org = a["Current Organization (if not current student)"] || "";
-        const linkedin = a["LinkedIn ID (If available)"] || "";
+    tbody.innerHTML=data.map((a,i)=>{
+        const name=a["Official Name"]||"";
+        const role=a["Current Job Designation (if not current student)"]||"Student";
+        const org=a["Current Organization (if not current student)"]||"-";
+        const degree=a["Degree"]||"-";
+        const year=a["Passing Year"]||"-";
+        const email=a["Contact Email"]||"-";
+        const phone=a["Phone"]||"-";
+        const linkedin=a["LinkedIn ID (If available)"]||"";
 
-        const img = getProfileImage(a);
+        const img=getImg(a);
 
-        const linkedinUrl = linkedin
-            ? (linkedin.includes("linkedin") ? linkedin : "https://linkedin.com/in/" + linkedin)
-            : "";
+        const link=linkedin
+            ? (linkedin.includes("linkedin")?linkedin:"https://linkedin.com/in/"+linkedin)
+            :"";
 
         return `
-        <div class="card">
-            <img src="${img}" class="img"
-                onerror="this.src='${avatar(name)}'">
+        <tr onclick="toggle(${i})">
+            <td>
+                <div class="profile">
+                    <img src="${img}" class="avatar" onerror="this.src='${avatar(name)}'">
+                    ${name}
+                </div>
+            </td>
+            <td>${role}</td>
+            <td>${org}</td>
+            <td>${degree}</td>
+            <td>${year}</td>
+            <td>${link?`<a href="${link}" target="_blank" class="btn">View</a>`:"-"}</td>
+        </tr>
 
-            <div class="name">${name}</div>
-            <div class="title">${job} ${org ? "• "+org : ""}</div>
-
-            ${linkedinUrl ? `<a href="${linkedinUrl}" target="_blank" class="btn">LinkedIn</a>` : ""}
-        </div>
+        <tr class="expand" id="exp-${i}">
+            <td colspan="6">
+                <div class="detail-grid">
+                    <div><span class="label">Email:</span> ${email}</div>
+                    <div><span class="label">Phone:</span> ${phone}</div>
+                    <div><span class="label">Degree:</span> ${degree}</div>
+                    <div><span class="label">Graduation:</span> ${year}</div>
+                    <div><span class="label">Organization:</span> ${org}</div>
+                    <div><span class="label">Role:</span> ${role}</div>
+                </div>
+            </td>
+        </tr>
         `;
     }).join("");
 }
+
+function toggle(i){
+    const row=document.getElementById("exp-"+i);
+    row.style.display = row.style.display==="table-row"?"none":"table-row";
+}
+
+// SEARCH
+document.getElementById("search").addEventListener("input",e=>{
+    const val=e.target.value.toLowerCase();
+
+    const filtered=window.all.filter(a=>{
+        return Object.values(a).join(" ").toLowerCase().includes(val);
+    });
+
+    render(filtered);
+});
 
 load();
 
